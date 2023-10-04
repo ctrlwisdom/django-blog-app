@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="section search-result-wrap">
+    <div class="container">
+      
+      <div class="row posts-entry">
+        <div class="col-lg-8">
+        {% for post in posts %}
+          <div class="blog-entry d-flex blog-entry-search-item">
+            <a href="{% url 'post-detail' post.slug %}" class="img-link me-4">
+              <img src="{{ post.thumbnail.url }}" alt="Image" class="img-fluid">
+            </a>
+            <div>
+              <span class="date">{{ post.created_at }} &bullet; <a href="{% url 'category-detail' post.category.slug %}">{{ post.category.name }}</a></span>
+              <h2><a href="{% url 'post-detail' post.slug %}">{{ post.title }}</a></h2>
+              <p>{{ post.snippet | safe }}</p>
+              <p><a href="{% url 'post-detail' post.slug %}" class="btn btn-sm btn-outline-primary">Read More</a></p>
+            </div>
+          </div>
+        {% endfor %}
+
+          <div class="row text-start pt-5 border-top">
+            {% if posts.has_other_pages %}
+            <div class="col-md-12">
+              <div class="custom-pagination">
+                {% if posts.has_previous %}
+                <a href="?page={{posts.previous_page_number}}">&laquo;</a>
+                {% endif %}
+
+                {% for i in posts.paginator.page_range %}
+                {% if posts.number == i %}
+                <span>{{i}}</span>
+                {% else %}
+                <a href="?page={{i}}">{{i}}</a>
+                {% endif %}
+                {% endfor %}
+                
+                {% if posts.has_next %}
+                <a href="?page={{posts.next_page_number}}">&raquo;</a>
+                {% endif %}
+              </div>
+            </div>
+            {% else %}
+              <div>Page 1 of 1</div>
+            {% endif %}
+          </div>
+        </div>
+        {% include 'blogs/sidebar.html' %}
+    </div>
+</div>
+
+{% endblock  %}
