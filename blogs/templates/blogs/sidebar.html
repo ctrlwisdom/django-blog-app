@@ -1,45 +1,22 @@
 <div class="col-lg-4 sidebar">
-    <div class="sidebar-box">
-        <h3 class="heading">Popular Posts</h3>
+    <h3 class="heading">Related Posts</h3>
         <div class="post-entry-sidebar">
             <ul>
+                {% for p in related_posts %}
                 <li>
                     <a href="">
-                        <img src="images/img_1_sq.jpg" alt="Image placeholder" class="me-4 rounded">
+                        <img src="{{p.thumbnail.url}}" alt="Image placeholder" class="me-4 rounded">
                         <div class="text">
-                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
+                            <h4>{{p.title}}</h4>
                             <div class="post-meta">
-                                <span class="mr-2">March 15, 2018 </span>
+                                <span class="mr-2">{{p.created_at}}</span>
                             </div>
                         </div>
                     </a>
                 </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
-    <div class="sidebar-box">
-        <h3 class="heading">Categories</h3>
-        <ul class="categories">
-            {% for category in category_list %}
-            <li><a href="#">{{ category.name }}<span>(12)</span></a></li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="sidebar-box">
-        <h3 class="heading">Tags</h3>
-        <ul class="tags">
-            <li><a href="#">Travel</a></li>
-            <li><a href="#">Adventure</a></li>
-            <li><a href="#">Food</a></li>
-            <li><a href="#">Lifestyle</a></li>
-            <li><a href="#">Business</a></li>
-            <li><a href="#">Freelancing</a></li>
-            <li><a href="#">Travel</a></li>
-            <li><a href="#">Adventure</a></li>
-            <li><a href="#">Food</a></li>
-            <li><a href="#">Lifestyle</a></li>
-            <li><a href="#">Business</a></li>
-            <li><a href="#">Freelancing</a></li>
-        </ul>
-    </div>
+                    
 </div>

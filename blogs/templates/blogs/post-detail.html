@@ -7,20 +7,26 @@
     <div class="container">
         <div class="row blog-entries element-animate">
             <div class="col-md-12 col-lg-8 main-content">
+              <div class="pt-5">
+                <p>Categories:  <a href="#">{{ post.category }}</a>
+                  Tags: 
+                {% for tag in post.tags.all %}
+                  <a href="#">{{ tag.name }}</a>
+                {% endfor %}
+              </p>
+              </div>
+              <img class="img-fluid" src="{{post.thumbnail.url}}" alt="">
+              <br><br>
+              <h4>{{post.title}}</h4>
                 <div class="post-content-body">
                     {{ post.content | safe }}
-                </div>
-                <div class="pt-5">
-                    <p>Categories:  <a href="#">{{ post.category }}</a>Tags: <a href="#">{{ post.tags }}</a></p>
                 </div>
                 <div class="pt-5 comment-wrap">
                     <h3 class="mb-5 heading">Comments</h3>
                     <ul class="comment-list">
                       {% for comment in comments %}
                       <li class="comment">
-                        <div class="vcard">
-                          <img src="images/person_1.jpg" alt="Image placeholder">
-                        </div>
+                        <!-- div.vcard for profile img -->
                         <div class="comment-body">
                           <h3>{{ comment.name }}</h3>
                           <div class="meta">{{ comment.created_at }}</div>

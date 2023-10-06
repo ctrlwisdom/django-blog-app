@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="row posts-entry">
-            <div class="col-lg-8">
+            <div class="col">
                 {% for post in posts %}
                   <div class="blog-entry d-flex blog-entry-search-item">
                     <a href="{% url 'post-detail' post.slug %}" class="img-link me-4">
@@ -53,10 +53,10 @@
                     {% else %}
                     <div>Page 1 of 1</div>
                     {% endif %}
+                    <br><br><br>
                 </div>
             </div>
             {% endif %}
-            {% include 'blogs/sidebar.html' %}
         </div> 
     </div> 
 </div>

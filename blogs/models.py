@@ -47,8 +47,7 @@ class Post(models.Model):
         pass
 
 
-class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+class BaseComment(models.Model):
     name = models.CharField(blank=False, max_length=50)
     email = models.EmailField(max_length=256)
     message = models.TextField(blank=False)
@@ -56,9 +55,15 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['created_at']
+        abstract = True
 
-    def get_profile_image(self):
-        pass
+    def __str__(self):
+        return self.message
 
 
+class Comment(BaseComment):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+
+class Reply(BaseComment):
+    comment = models.ForeignKey(Comment,on_delete=models.CASCADE)

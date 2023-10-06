@@ -18,12 +18,6 @@ def tagged(request, slug):
     }
     return render(request, 'blogs/tag.html', context)
 
-def category_list(request):
-    context = {}
-    category_list = Category.objects.all()
-    context['category_list'] = category_list
-    return render(request, 'blogs/category.html', context)
-
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     posts = Post.objects.filter(category=category)
@@ -31,12 +25,16 @@ def category_detail(request, slug):
         'category': category,
         'posts': posts
     }
+    categories = Category.objects.all()
+    context['categories'] = categories
     return render(request, 'blogs/category-detail.html', context)
 
 
 def home(request):
     context = {}
     post_list = Post.objects.all().filter(published=True)
+    categories = Category.objects.all()
+    context['categories'] = categories
     # set pagination
     p = Paginator(post_list, 1)
     page = request.GET.get('page')
@@ -48,6 +46,7 @@ def home(request):
 
 def post_detail(request, slug):
     post = Post.objects.get(slug=slug)
+    related_posts = Post.objects.filter(category=post.category)
     comments = Comment.objects.all().filter(post=post)
     form = CommentForm()
     if request.method == "POST":
@@ -57,7 +56,16 @@ def post_detail(request, slug):
             new_comment.post = post
             new_comment.save()
         return HttpResponseRedirect(request.path_info)
-    return render(request, 'blogs/post-detail.html', {'post': post, 'comments': comments, 'form': form})
+    
+    context = {
+        'post': post,
+        'comments': comments,
+        'form': form,
+        'related_posts':related_posts
+    }
+    categories = Category.objects.all()
+    context['categories'] = categories
+    return render(request, 'blogs/post-detail.html', context)
 
 
 def search(request):
@@ -65,7 +73,7 @@ def search(request):
     if search:     
         posts_list = Post.objects.filter(Q(title__icontains=search) | Q(content__icontains=search))
         # set pagination
-        p = Paginator(posts_list, 1)
+        p = Paginator(posts_list, 2)
         page = request.GET.get('page')
         # posts = p.get_page(page)
         try:
@@ -74,5 +82,8 @@ def search(request):
             posts = p.page(1)
         except EmptyPage:
             posts = p.page(p.num_pages)
-    return render(request, 'blogs/search-result.html', {'search':search, 'posts':posts})
+    context = {'search':search, 'posts':posts}
+    categories = Category.objects.all()
+    context['categories'] = categories
+    return render(request, 'blogs/search-result.html', context)
 
