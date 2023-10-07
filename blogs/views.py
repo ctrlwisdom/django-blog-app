@@ -36,7 +36,7 @@ def home(request):
     categories = Category.objects.all()
     context['categories'] = categories
     # set pagination
-    p = Paginator(post_list, 1)
+    p = Paginator(post_list, 10)
     page = request.GET.get('page')
     posts = p.get_page(page)
     context['posts'] = posts
@@ -46,7 +46,7 @@ def home(request):
 
 def post_detail(request, slug):
     post = Post.objects.get(slug=slug)
-    related_posts = Post.objects.filter(category=post.category)
+    related_posts = post.tags.similar_objects()[:10]
     comments = Comment.objects.all().filter(post=post)
     form = CommentForm()
     if request.method == "POST":

@@ -22,9 +22,9 @@
                         </form>
 
                         <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
-                            <li class="active"><a href="{% url "home" %}">Home</a></li>
+                            <li><a href="{% url "home" %}">Home</a></li>
                             {% for category in categories %}
-                            <li><a href="{% url "category-detail" category.slug %}">{{category.name}}</a></li>
+                            <li ><a href="{% url "category-detail" category.slug %}">{{category.name}}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
