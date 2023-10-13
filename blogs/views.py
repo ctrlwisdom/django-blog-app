@@ -47,20 +47,28 @@ def home(request):
 def post_detail(request, slug):
     post = Post.objects.get(slug=slug)
     related_posts = post.tags.similar_objects()[:10]
-    comments = Comment.objects.all().filter(post=post)
-    form = CommentForm()
+    comments = post.comments.filter(active=True, parent__isnull=True)
+    comment_form = CommentForm()
     if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            new_comment = form.save(commit=False)
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            parent_obj = None
+            try:
+                parent_id = int(request.POST.get('parent_id'))
+            except:
+                parent_id = None
+            if parent_id:
+                reply_comment = comment_form.save(commit=False)
+                reply_comment.parent = Comment.objects.get(pk=parent_id)
+            new_comment = comment_form.save(commit=False)
             new_comment.post = post
             new_comment.save()
-        return HttpResponseRedirect(request.path_info)
+        return HttpResponseRedirect(request.path_info) #(post.get_absolute_url)
     
     context = {
         'post': post,
         'comments': comments,
-        'form': form,
+        'form': comment_form,
         'related_posts':related_posts
     }
     categories = Category.objects.all()

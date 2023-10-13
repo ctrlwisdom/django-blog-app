@@ -43,27 +43,35 @@ class Post(models.Model):
         self.slug = slugify(self.title)
         super(Post, self).save(*args, **kwargs)
 
-    def format_date_time(self):
-        pass
 
 
-class BaseComment(models.Model):
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(blank=False, max_length=50)
     email = models.EmailField(max_length=256)
     message = models.TextField(blank=False)
+    active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
 
     class Meta:
-        abstract = True
+        ordering = ('created_at',)
 
     def __str__(self):
-        return self.message
+        return 'Comment by {} - {}'.format(self.name, self.pk) 
+    
+    @property
+    def children(self):
+        return Comment.objects.filter(parent=self).reverse()
+
+    @property
+    def is_parent(self):
+        if self.parent is None:
+            return True
+        return False
+    
+    
+    
 
 
-class Comment(BaseComment):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-
-
-class Reply(BaseComment):
-    comment = models.ForeignKey(Comment,on_delete=models.CASCADE)

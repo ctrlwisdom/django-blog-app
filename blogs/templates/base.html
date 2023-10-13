@@ -29,6 +29,11 @@
 
 
 	<title>Blogy &mdash; Free Bootstrap 5 Website Template by Untree.co</title>
+	<style>
+		#child {
+			display: none;
+		}
+	</style>
 </head>
 <body>
     {% include 'blogs/nav.html' %}
@@ -58,7 +63,16 @@
 <script src="{% static 'js/navbar.js' %}"></script>
 <script src="{% static 'js/counter.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>
-
+<script>
+	function hideFunc() {
+		var x = document.getElementById("child");
+		if (x.style.display === "none") {
+			x.style.display = "block"
+		} else {
+			x.style.display = "none"
+		}
+	}
+</script>
 
 </body>
 </html>
